@@ -1,40 +1,38 @@
 <?php
-	function checkBrackets($sString)
+	
+	$str = "[5] * 3 - ( 4 - 7 * [3-6])";
+	
+	function checkBrackets($str)
 	{
-		//первая проверка на то, что данные были переданы, и строка не пустая
-		//в этом варианте возвращаем true, так как проблем с дужками нету :)
-		if(is_null($sString) || $sString == '')
-			return true;
+
+		$str = preg_replace('#[^\[\]\(\)]#','',$str);  
+		echo $str; 
 		
-		//инициализируем скобки которые будем проверять 
-		$aSkobki = array('(', ')', '[', ']');
 		
-		//получаем длину строки для её обхода.
-		//а так же чтобы не проверять прямо в цикле. Дольше будет выполняться.
-		$iLength = strlen($sString);
-		//инициализируем переменную для строки скобок
-		$sSkobki = '';
-		for($i = 0; $i < $iLength; $i++)
-		{
-			if(in_array($sString[$i], $aSkobki))
-				$sSkobki .= $sString[$i];
+		$brackets = array('(', '[',')', ']');
+		$open_brackets = array('(', '[');
+		$close_brackets = array(')', ']');
+
+		$res = '';
+		for($i = 0; $i < strlen($str); $i++) {
+			if(in_array($str[$i], $open_brackets )) {
+				$res[$i] = $str[$i];
+			}
+				
 		}
-		//чистим память
-		unset($sString);
-		//получаем длину строки чтобы обойти её всю и очистить.
-		//такой вариант не очень хорош, но по условии нужна была одна функция.
-		//если бы можно несколько функций, то создал бы рекурсивную функцию для чистки строки
-		$iLength = strlen($sSkobki);
-		//чистим строку
-		for($i = 0; $i < $iLength; $i++)
-			$sSkobki = str_replace(array('[]', '()'), array('', ''), $sSkobki);
-	 
-		//возвращаем результат
-		if(strlen($sSkobki) == 0)
-			return 1;
-		else
-			return 2;
+		
+		$res2 = '';
+		for($i = 0; $i < strlen($str); $i++) {
+			if(in_array($str[$i], $close_brackets)) {
+				$res2[$i] = $str[$i];
+			
+			}
+				
+		}
+		print_r($res);
+		print_r($res2);
+		
 	}
 	
-	echo checkBrackets();
+	echo checkBrackets($str);
 ?>
