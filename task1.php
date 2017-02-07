@@ -1,8 +1,40 @@
 <?php
-	function checkBrackets()
+	function checkBrackets($sString)
 	{
-		echo 1;
+		//первая проверка на то, что данные были переданы, и строка не пустая
+		//в этом варианте возвращаем true, так как проблем с дужками нету :)
+		if(is_null($sString) || $sString == '')
+			return true;
+		
+		//инициализируем скобки которые будем проверять 
+		$aSkobki = array('(', ')', '[', ']');
+		
+		//получаем длину строки для её обхода.
+		//а так же чтобы не проверять прямо в цикле. Дольше будет выполняться.
+		$iLength = strlen($sString);
+		//инициализируем переменную для строки скобок
+		$sSkobki = '';
+		for($i = 0; $i < $iLength; $i++)
+		{
+			if(in_array($sString[$i], $aSkobki))
+				$sSkobki .= $sString[$i];
+		}
+		//чистим память
+		unset($sString);
+		//получаем длину строки чтобы обойти её всю и очистить.
+		//такой вариант не очень хорош, но по условии нужна была одна функция.
+		//если бы можно несколько функций, то создал бы рекурсивную функцию для чистки строки
+		$iLength = strlen($sSkobki);
+		//чистим строку
+		for($i = 0; $i < $iLength; $i++)
+			$sSkobki = str_replace(array('[]', '()'), array('', ''), $sSkobki);
+	 
+		//возвращаем результат
+		if(strlen($sSkobki) == 0)
+			return 1;
+		else
+			return 2;
 	}
 	
-	checkBrackets();
+	echo checkBrackets();
 ?>
