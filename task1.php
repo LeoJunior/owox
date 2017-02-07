@@ -4,35 +4,30 @@
 	
 	function checkBrackets($str)
 	{
-
-		$str = preg_replace('#[^\[\]\(\)]#','',$str);  
-		echo $str; 
-		
-		
-		$brackets = array('(', '[',')', ']');
-		$open_brackets = array('(', '[');
-		$close_brackets = array(')', ']');
-
-		$res = '';
-		for($i = 0; $i < strlen($str); $i++) {
-			if(in_array($str[$i], $open_brackets )) {
-				$res[$i] = $str[$i];
-			}
-				
-		}
-		
-		$res2 = '';
-		for($i = 0; $i < strlen($str); $i++) {
-			if(in_array($str[$i], $close_brackets)) {
-				$res2[$i] = $str[$i];
+		if(is_string($str)) {
 			
-			}
+			$str = preg_replace('#[^\[\]\(\)]#','',$str);  
+			echo $str."<br>"; 
+			
+			$str = preg_replace(array('#\[\]#', '#\(\)#'),'',$str);  
+			
+			if(!empty($str)) {
 				
+				return false;
+				
+			} else {
+			
+				return true;
+				
+			}
+			
+		} else {
+			
+			return false;
+			
 		}
-		print_r($res);
-		print_r($res2);
 		
 	}
 	
-	echo checkBrackets($str);
+	checkBrackets($str);
 ?>
