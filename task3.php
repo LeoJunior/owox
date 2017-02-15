@@ -1,113 +1,116 @@
 <?php 
 
-interface ProductInterface
-{
-    public function getId();
-    public function getModel();
-    public function getPrice();
-    public function getType();
+class Fixed {
+	private $value = 200;
+	
+	public function getTariff()
+	{
+		return $this->value;
+	}
+
+
 }
 
-class Keyboard implements ProductInterface
-{
-    protected $_id;
-    protected $_model;
-    protected $_price;
-
-    public function __construct($product)
-    {
-        $this->_id = $product['id'];
-        $this->model = $product['model'];
-        $this->_price = $product['price'];
-    }
-
-    public function getId()
-    {
-        return $this->_id;
-    }
-
-    public function getModel()
-    {
-        return $this->_model;
-    }
-
-    public function getPrice()
-    {
-        return $this->_price;
-    }
-
-    public function getType()
-    {
-        return 'keyboard';
-    }
+class Hourly {
+	private $value = 100;
+	
+	public function getTariff()
+	{
+		return $this->value;
+	}
 }
 
-class Mouse implements ProductInterface
+
+class TypeFactory
 {
-    protected $_id;
-    protected $_model;
-    protected $_price;
-
-    public function __construct($product)
-    {
-        $this->_id = $product['id'];
-        $this->model = $product['model'];
-        $this->_price = $product['price'];
-    }
-
-    public function getId()
-    {
-        return $this->_id;
-    }
-
-    public function getModel()
-    {
-        return $this->_model;
-    }
-
-    public function getPrice()
-    {
-        return $this->_price;
-    }
-
-    public function getType()
-    {
-        return 'keyboard';
-    }
+    private $type;
+	
+	public function create($type)
+	{
+		$className = $type['type'];
+		
+		if(class_exists($type['tariff'])) {
+			
+			return new $className(new $type['tariff'], $type['quantity']);
+			
+		} else {
+		
+			return false;
+			
+		}
+		
+	}
 }
 
-$products = array(
+
+class Speaking
+{
+
+    public function __construct($tariff, $quantity)
+    {
+		$value = $tariff->getTariff();
+		$this->getCost($value, $quantity);
+    }
+
+
+    public function getCost($tariff, $quantity)
+    {
+        echo $tariff * $quantity;
+    }
+
+}
+
+class Grammar {
+   
+
+    public function __construct($tariff, $quantity)
+    {
+		$value = $tariff->getTariff();
+		$this->getCost($value, $quantity);
+    }
+
+
+    public function getCost($tariff, $quantity)
+    {
+        echo $tariff * $quantity;
+    }
+
+}
+
+$typeLessons = array(
     array(
-        'id'    => 1,
-        'model' => 'Logitech k810',
-        'price' => '149.99',
-        'type'  => 'keyboard'
+        'type'  => 'speaking',
+		'tariff' => 'fixed',
+		'quantity' => 2
+        
     ),
     array(
-        'id'    => 12,
-        'model' => 'Logitech G700',
-        'price' => '139.99',
-        'type'  => 'mouse'
+		'type'  => 'grammar',
+        'tariff' => 'hourly',
+		'quantity' => 5
+        
     )
 );
 
-$cart = array();
 
-foreach($products as $product)
-{
-    if(class_exists($product['type']))
+$factory = new TypeFactory();
+
+foreach($typeLessons as $type) {
+    if(class_exists($type['type']))
     {
-        $cart[] = new $product['type']($product);
+        $cart[] = $factory->create($type);
     }
     else
-    {
-        throw new InvalidArgumentException("Тип ".$product['type']." не найден");
+	{
+        return false;
     }
-}
+} 
 
-echo '<pre>';
-print_r($cart);
-echo '<pre>';﻿
+
+
+
+//print_r($cart);
+
 
 
 	
