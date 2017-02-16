@@ -1,6 +1,19 @@
 <?php 
 
-class Fixed {
+
+interface Tariff {
+
+	public function getTariff();
+}
+
+interface TypeLessons {
+
+	public function getCost($tariff, $quantity);
+	
+}
+
+class Fixed implements Tariff {
+	
 	private $value = 200;
 	
 	public function getTariff()
@@ -11,7 +24,8 @@ class Fixed {
 
 }
 
-class Hourly {
+class Hourly implements Tariff {
+	
 	private $value = 100;
 	
 	public function getTariff()
@@ -21,9 +35,40 @@ class Hourly {
 }
 
 
-class TypeFactory
-{
-    private $type;
+class Speaking implements TypeLessons {
+
+    public function __construct($tariff, $quantity)
+    {
+		$value = $tariff->getTariff();
+		$this->getCost($value, $quantity);
+    }
+
+
+    public function getCost($tariff, $quantity)
+    {
+        return $tariff * $quantity;
+    }
+
+}
+
+class Grammar implements TypeLessons {
+   
+
+    public function __construct($tariff, $quantity)
+    {
+		$value = $tariff->getTariff();
+		$this->getCost($value, $quantity);
+    }
+
+
+    public function getCost($tariff, $quantity)
+    {
+        return $tariff * $quantity;
+    }
+
+}
+
+class Factory {
 	
 	public function create($type)
 	{
@@ -42,74 +87,40 @@ class TypeFactory
 	}
 }
 
-
-class Speaking
-{
-
-    public function __construct($tariff, $quantity)
-    {
-		$value = $tariff->getTariff();
-		$this->getCost($value, $quantity);
-    }
-
-
-    public function getCost($tariff, $quantity)
-    {
-        echo $tariff * $quantity;
-    }
-
-}
-
-class Grammar {
-   
-
-    public function __construct($tariff, $quantity)
-    {
-		$value = $tariff->getTariff();
-		$this->getCost($value, $quantity);
-    }
-
-
-    public function getCost($tariff, $quantity)
-    {
-        echo $tariff * $quantity;
-    }
-
-}
-
 $typeLessons = array(
     array(
-        'type'  => 'speaking',
+        'type'  => 'Speaking',
 		'tariff' => 'fixed',
 		'quantity' => 2
         
     ),
     array(
-		'type'  => 'grammar',
+		'type'  => 'Grammar',
         'tariff' => 'hourly',
-		'quantity' => 5
+		'quantity' => 1
         
     )
 );
 
 
-$factory = new TypeFactory();
+$factory = new Factory();
 
 foreach($typeLessons as $type) {
-    if(class_exists($type['type']))
-    {
-        $cart[] = $factory->create($type);
-    }
-    else
-	{
+    
+	if(class_exists($type['type'])) {
+       
+	   $factory->create($type);
+	   
+    } else {
+	
         return false;
+		
     }
 } 
 
 
 
 
-//print_r($cart);
 
 
 
