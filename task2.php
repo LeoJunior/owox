@@ -17,10 +17,10 @@
 					$array[] = $k[$i];
 				}
 			
-				$first_half = array_splice($array, $half);
-				$second_half = array_splice($array, 0, $half);
+				$firstHalfArray = array_splice($array, $half);
+				$secondHalfArray = array_splice($array, 0, $half);
 				
-				if(array_sum($first_half) == array_sum($second_half)) {
+				if(array_sum($firstHalfArray) == array_sum($secondHalfArray)) {
 					
 					return true;
 					
