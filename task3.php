@@ -1,63 +1,65 @@
 <?php 
 
 
-interface Tariff {
+abstract class Tariff {
 
+	abstract public function getNameClass();
+	
 	public function getTariff();
 }
 
-interface TypeLessons {
+abstract class TypeLessons {
 
-	public function getCost($tariff, $quantity);
+	abstract public function getCost($tariff, $quantity);
 	
 }
 
-class Fixed implements Tariff {
+class Fixed extends Tariff {
 	
-	private $value = 200;
+	const VALUE = 200;
 	
 	public function getTariff()
 	{
-		return $this->value;
+		return self::VALUE;
 	}
 
 
 }
 
-class Hourly implements Tariff {
+class Hourly extends Tariff {
 	
-	private $value = 100;
+	const VALUE = 100;
 	
 	public function getTariff()
 	{
-		return $this->value;
+		return self::VALUE;
 	}
 }
 
 
-class Speaking implements TypeLessons {
+class Speaking extends TypeLessons {
 
     public function __construct($tariff, $quantity)
     {
 		$value = $tariff->getTariff();
-		$this->getCost($value, $quantity);
+		//$this->getCost($value, $quantity);
     }
 
 
     public function getCost($tariff, $quantity)
     {
-        return $tariff * $quantity;
+        echo $tariff * $quantity;
     }
 
 }
 
-class Grammar implements TypeLessons {
+class Grammar extends TypeLessons {
    
 
     public function __construct($tariff, $quantity)
     {
 		$value = $tariff->getTariff();
-		$this->getCost($value, $quantity);
+		//$this->getCost($value, $quantity);
     }
 
 
@@ -88,13 +90,13 @@ class Factory {
 }
 
 $typeLessons = array(
-    array(
+    "speaking" => array(
         'type'  => 'Speaking',
 		'tariff' => 'fixed',
 		'quantity' => 2
         
     ),
-    array(
+    "grammar" => array(
 		'type'  => 'Grammar',
         'tariff' => 'hourly',
 		'quantity' => 1
