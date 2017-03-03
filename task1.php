@@ -7,8 +7,13 @@
 			
 			$str = preg_replace('#[^\[\]\(\)]#','',$str);  
 			
-			$str = preg_replace(array('#\[\]#', '#\(\)#'),'',$str);  
-			
+			for($i = 0; $i < strlen($str); $i++) {
+				
+				$str = str_replace(array('[]', '()'), array('', ''), $str); 
+				
+			}
+			 
+	
 			if(!empty($str)) {
 				
 				return false;
@@ -26,5 +31,9 @@
 		}
 		
 	}
+	
+
+	
+
 	
 ?>
