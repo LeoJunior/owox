@@ -3,9 +3,9 @@
 
 abstract class Tariff {
 
-	abstract public function getNameClass();
+	//abstract public function getNameClass();
 	
-	public function getTariff();
+	abstract public function getTariff();
 }
 
 abstract class TypeLessons {
@@ -82,7 +82,8 @@ class Factory {
 			
 		} else {
 		
-			return false;
+			throw new Exception('error');
+
 			
 		}
 		
@@ -92,7 +93,7 @@ class Factory {
 $typeLessons = array(
     "speaking" => array(
         'type'  => 'Speaking',
-		'tariff' => 'fixed',
+		'tariff' => 'fixed2',
 		'quantity' => 2
         
     ),
@@ -110,8 +111,12 @@ $factory = new Factory();
 foreach($typeLessons as $type) {
     
 	if(class_exists($type['type'])) {
-       
-	   $factory->create($type);
+        try {
+			$factory->create($type);
+		} catch(Exception $e) {
+			echo $e->getTraceAsString();
+		}
+	   
 	   
     } else {
 	
