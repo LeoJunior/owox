@@ -2,134 +2,120 @@
 
 
 abstract class Tariff {
-
-	//abstract public function getNameClass();
 	
-	abstract public function getTariff();
+	protected $value;
+
+    public function getTariff()
+    {
+        return $this->value;
+    }
 }
 
-abstract class TypeLessons {
+abstract class Lessons {
 
-	abstract public function getCost($tariff, $quantity);
+    private $tariff;
+    private $quantity;
+
+
+    public function __construct($tariff, $quantity)
+    {
+        $this->tariff  = $tariff;
+        $this->quantity = $quantity;
+    }
+
+    public function getCost()
+    {
+        echo $this->tariff  * $this->quantity;
+    }
 	
 }
+
+class Speaking extends Lessons {}
+
+class Grammar extends Lessons {}
 
 class Fixed extends Tariff {
-	
-	const VALUE = 200;
-	
-	public function getTariff()
-	{
-		return self::VALUE;
-	}
 
-
+	protected $value = 200;
 }
 
 class Hourly extends Tariff {
-	
-	const VALUE = 100;
-	
-	public function getTariff()
-	{
-		return self::VALUE;
-	}
-}
 
-
-class Speaking extends TypeLessons {
-
-    public function __construct($tariff, $quantity)
-    {
-		$value = $tariff->getTariff();
-		//$this->getCost($value, $quantity);
-    }
-
-
-    public function getCost($tariff, $quantity)
-    {
-        echo $tariff * $quantity;
-    }
+    protected $value = 100; 
 
 }
 
-class Grammar extends TypeLessons {
-   
-
-    public function __construct($tariff, $quantity)
-    {
-		$value = $tariff->getTariff();
-		//$this->getCost($value, $quantity);
-    }
 
 
-    public function getCost($tariff, $quantity)
-    {
-        return $tariff * $quantity;
-    }
-
-}
 
 class Factory {
 	
-	public function create($type)
+	public static function make($type)
 	{
 		$className = $type['type'];
 		
-		if(class_exists($type['tariff'])) {
+		if(class_exists($type['tariff']) && class_exists($className)) {
 			
-			return new $className(new $type['tariff'], $type['quantity']);
+			$tariff = new $type['tariff'];
+
+		    return new $className($tariff->getTariff(), $type['quantity']);
 			
 		} else {
 		
-			throw new Exception('error');
+			throw new Exception('Class not exist');
 
-			
 		}
 		
 	}
+}
+
+class LessonController
+{
+    public function create($type)
+    {
+
+        $product = Factory::make($type);
+
+        return $product;
+    }
 }
 
 $typeLessons = array(
     "speaking" => array(
         'type'  => 'Speaking',
-		'tariff' => 'fixed2',
+		'tariff' => 'fixed',
 		'quantity' => 2
-        
+
     ),
     "grammar" => array(
 		'type'  => 'Grammar',
         'tariff' => 'hourly',
 		'quantity' => 1
-        
+
     )
 );
 
 
-$factory = new Factory();
+$lesson = new LessonController();
 
-foreach($typeLessons as $type) {
-    
-	if(class_exists($type['type'])) {
+
+foreach($typeLessons as $key=>$type) {
+
         try {
-			$factory->create($type);
+
+            $obj[] = $lesson->create($type);
+
 		} catch(Exception $e) {
-			echo $e->getTraceAsString();
+
+			echo $e->getMessage();
+
 		}
-	   
-	   
-    } else {
-	
-        return false;
-		
-    }
-} 
 
+}
 
-
-
+print_r($obj);
 
 
 
 	
-?>
+
